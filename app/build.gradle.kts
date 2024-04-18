@@ -1,18 +1,39 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
     namespace = "com.irudaru.airporttickets"
     compileSdk = 34
 
+    sourceSets {
+        sourceSets.getByName("main") {
+            java.srcDirs("src/main/kotlin")
+            java.srcDirs("src/main/java")
+        }
+        sourceSets.getByName("main") {
+            java.srcDirs("src/test/kotlin")
+            java.srcDirs("src/test/java")
+        }
+    }
+
+    // For KSP
+    applicationVariants.configureEach {
+        sourceSets {
+            getByName(name) {
+                java.srcDirs("build/generated/ksp/${name}/kotlin")
+            }
+        }
+    }
+
     defaultConfig {
         applicationId = "com.irudaru.airporttickets"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -60,6 +81,37 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+
+    // Architecture Components
+    val lifecycle_version = "2.7.0"
+    // ViewModel
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    // ViewModel utilities for Compose
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+    // Lifecycle utilities for Compose
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+
+
+    // Local data
+    val room_version = "2.6.1"
+    implementation ("androidx.room:room-runtime:$room_version")
+    annotationProcessor ("androidx.room:room-compiler:$room_version")
+        // To use Kotlin Symbol Processing (KSP)
+    ksp ("androidx.room:room-compiler:$room_version")
+
+    // DI / Service locator
+    val koin_version = "3.5.6"
+    implementation(platform("io.insert-koin:koin-bom:$koin_version"))
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation("io.insert-koin:koin-android:$koin_version")
+    implementation("io.insert-koin:koin-androidx-compose:$koin_version")
+    implementation("io.insert-koin:koin-annotations:$koin_version")
+    ksp ("io.insert-koin:koin-ksp-compiler:$koin_version")
+
+    // Concurrency
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
     // Test
     testImplementation("junit:junit:4.13.2")
