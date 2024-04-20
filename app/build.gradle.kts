@@ -8,25 +8,42 @@ android {
     namespace = "com.irudaru.airporttickets"
     compileSdk = 34
 
+//    sourceSets {
+//        sourceSets.getByName("main") {
+//            java.srcDirs("src/main/kotlin")
+//            java.srcDirs("src/main/java")
+//        }
+//        sourceSets.getByName("test") {
+//            java.srcDirs("src/test/kotlin")
+//            java.srcDirs("src/test/java")
+//        }
+//    }
+//
+//    // For KSP
+//    applicationVariants.configureEach {
+//        sourceSets {
+//            getByName(name) {
+//                java.srcDirs("build/generated/ksp/${name}/kotlin")
+//            }
+//        }
+//    }
+
     sourceSets {
         sourceSets.getByName("main") {
-            java.srcDirs("src/main/kotlin")
-            java.srcDirs("src/main/java")
+            java.srcDirs("build/generated/ksp/main/kotlin")
+            java.srcDirs("build/generated/ksp/main/java")
         }
-        sourceSets.getByName("main") {
-            java.srcDirs("src/test/kotlin")
-            java.srcDirs("src/test/java")
+
+        sourceSets.getByName("test") {
+            java.srcDirs("build/generated/ksp/test/kotlin")
+            java.srcDirs("build/generated/ksp/test/java")
         }
     }
 
-    // For KSP
-    applicationVariants.configureEach {
-        sourceSets {
-            getByName(name) {
-                java.srcDirs("build/generated/ksp/${name}/kotlin")
-            }
-        }
-    }
+//    android.applicationVariants.all { variant ->
+//        variant.addJavaSourceFoldersToModel(file("build/generated/ksp/${variant.name}/kotlin"))
+//        variant.
+//    }
 
     defaultConfig {
         applicationId = "com.irudaru.airporttickets"
@@ -68,15 +85,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    ksp {
+        arg("KOIN_CONFIG_CHECK","true")
+    }
 }
 
 dependencies {
 
     // Core
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation(platform("androidx.compose:compose-bom:2024.04.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -103,21 +123,22 @@ dependencies {
 
     // DI / Service locator
     val koin_version = "3.5.6"
+    val koin_annotations = "1.3.1"
     implementation(platform("io.insert-koin:koin-bom:$koin_version"))
     implementation("io.insert-koin:koin-core:$koin_version")
     implementation("io.insert-koin:koin-android:$koin_version")
     implementation("io.insert-koin:koin-androidx-compose:$koin_version")
-    implementation("io.insert-koin:koin-annotations:$koin_version")
-    ksp ("io.insert-koin:koin-ksp-compiler:$koin_version")
+    implementation("io.insert-koin:koin-annotations:$koin_annotations")
+    ksp ("io.insert-koin:koin-ksp-compiler:$koin_annotations")
 
     // Concurrency
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
     // Test
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.04.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
