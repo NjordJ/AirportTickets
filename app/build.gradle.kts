@@ -78,7 +78,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
     packaging {
         resources {
@@ -117,6 +117,7 @@ dependencies {
     // Local data
     val room_version = "2.6.1"
     implementation ("androidx.room:room-runtime:$room_version")
+    implementation ("androidx.room:room-ktx:$room_version")
     annotationProcessor ("androidx.room:room-compiler:$room_version")
         // To use Kotlin Symbol Processing (KSP)
     ksp ("androidx.room:room-compiler:$room_version")
@@ -130,6 +131,8 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:$koin_version")
     implementation("io.insert-koin:koin-annotations:$koin_annotations")
     ksp ("io.insert-koin:koin-ksp-compiler:$koin_annotations")
+
+    implementation ("javax.inject:javax.inject:1")
 
     // Concurrency
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")

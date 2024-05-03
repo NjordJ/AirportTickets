@@ -4,10 +4,11 @@ import com.irudaru.airporttickets.data.local.dao.AirportDao
 import com.irudaru.airporttickets.data.model.mapToAirport
 import com.irudaru.airporttickets.domain.entity.Airport
 import kotlinx.coroutines.flow.firstOrNull
+import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Single
 
 @Single
-class AirportRepositoryImpl(private val dao: AirportDao) {
+class AirportRepositoryImpl(@InjectedParam private val dao: AirportDao) {
 
     suspend fun getAllAirports(): List<Airport> {
         return dao.getAll().firstOrNull()?.map { it.mapToAirport() }

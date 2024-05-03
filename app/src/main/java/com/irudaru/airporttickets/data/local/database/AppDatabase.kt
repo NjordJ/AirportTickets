@@ -5,32 +5,59 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.irudaru.airporttickets.data.local.dao.AirportDao
+import com.irudaru.airporttickets.data.local.database.AppDatabase.Companion.PATH_TO_DB_ASSET
+import com.irudaru.airporttickets.data.local.database.AppDatabase.Companion.ROOM_DB_NAME
 import com.irudaru.airporttickets.data.model.AirportModel
+import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
-private const val PATH_TO_DB_ASSET = "database/airports.db"
-private const val ROOM_DB_NAME = "airports_app.db"
-
-@Single
 @Database(
     entities = [
         AirportModel::class
     ],
-    version = 1
+    version = 1,
+    exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun airportDao(): AirportDao
 
-    companion object : SingletonHolder<AppDatabase, Context>({
-        Room.databaseBuilder(it.applicationContext, AppDatabase::class.java, ROOM_DB_NAME)
+    companion object {
+        const val PATH_TO_DB_ASSET = "database/airports.db"
+        const val ROOM_DB_NAME = "airports_app.db"
+    }
+}
+
+@Module
+class DatabaseModule() {
+    private var databaseInstance: AppDatabase? = null
+
+    @Single
+    fun getInstance(@InjectedParam context: Context): AppDatabase {
+        return databaseInstance ?: synchronized(this) {
+            databaseInstance ?: createDatabase(context).also { databaseInstance = it }
+        }
+    }
+
+    private fun createDatabase(context: Context): AppDatabase {
+        return SingletonHolder(::createDatabaseInstance).getInstance(context)
+    }
+
+    private fun createDatabaseInstance(context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context.applicationContext,
+            AppDatabase::class.java,
+            ROOM_DB_NAME
+        )
             .createFromAsset(PATH_TO_DB_ASSET)
             .build()
-    })
+    }
 }
 
 open class SingletonHolder<T, A>(creator: (A) -> T) {
     private var creator: ((A) -> T)? = creator
+
     @Volatile
     private var instance: T? = null
 

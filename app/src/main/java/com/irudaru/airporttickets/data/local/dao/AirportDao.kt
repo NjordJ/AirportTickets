@@ -6,7 +6,6 @@ import com.irudaru.airporttickets.data.model.AirportModel
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Single
 
-@Single
 @Dao
 interface AirportDao {
 
