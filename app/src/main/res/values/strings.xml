@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AirportTickets</string>
+    <string name="is_one_way_checkbox">One way?</string>
 </resources>

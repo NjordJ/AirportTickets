@@ -1,4 +1,4 @@
-package com.irudaru.airporttickets.app
+package com.irudaru.airporttickets.presentation.di
 
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module

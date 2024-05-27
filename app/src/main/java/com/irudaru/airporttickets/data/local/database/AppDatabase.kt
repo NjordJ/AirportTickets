@@ -8,6 +8,7 @@ import com.irudaru.airporttickets.data.local.dao.AirportDao
 import com.irudaru.airporttickets.data.local.database.AppDatabase.Companion.PATH_TO_DB_ASSET
 import com.irudaru.airporttickets.data.local.database.AppDatabase.Companion.ROOM_DB_NAME
 import com.irudaru.airporttickets.data.model.AirportModel
+import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
@@ -30,6 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
 }
 
 @Module
+@ComponentScan
 class DatabaseModule() {
     private var databaseInstance: AppDatabase? = null
 
